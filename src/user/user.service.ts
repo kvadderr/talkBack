@@ -47,7 +47,8 @@ export class UserService {
     async getUserByEmailAndPass(login: string, password: string) {
 
       const user = await this.userRepository.findOne({
-        where: { login, password }
+        where: { login, password },
+        relations: ['favorite'],
       });
 
       return user;

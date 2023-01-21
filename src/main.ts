@@ -16,10 +16,9 @@ async function bootstrap() {
   const version = '1.0.0';
 
   const config = new DocumentBuilder()
-    .setTitle('Biotropica documentation')
-    .setDescription('Biotropica documentation REST API')
+    .setTitle('T2me documentation')
+    .setDescription('T2me documentation REST API')
     .setVersion(version)
-    .addTag('Biotropica')
     .addBearerAuth()
     .build();
 

@@ -22,7 +22,6 @@ export class OperatorService {
   }
 
   async createOperator(operator: Partial<Operator>): Promise<Operator> {
-    console.log('oper', operator)
     return this.operatorRepository.save({ ...operator });
   }
 

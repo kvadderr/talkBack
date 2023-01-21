@@ -44,7 +44,6 @@ export class MyGateway implements OnModuleInit {
             });
 
             socket.on('connectionConfirmation', function (data) {
-                console.log('setData', data);
                 socket.in(data.clientFIO).emit('connectionConfirmation', 
                     {
                         token: data.token,

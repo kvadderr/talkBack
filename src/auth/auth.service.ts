@@ -28,10 +28,17 @@ constructor(
 async login(dto){
   console.log(dto);
   let candidate = await this.usersService.getUserByEmailAndPass(dto.login, dto.password);
-
+  
   if (!candidate) {
     throw new HttpException(
       'Неверные данные авторизации',
+      HttpStatus.BAD_REQUEST,
+    );
+  };
+
+  if (candidate.isBanned === 1) {
+    throw new HttpException(
+      candidate.banCause,
       HttpStatus.BAD_REQUEST,
     );
   }

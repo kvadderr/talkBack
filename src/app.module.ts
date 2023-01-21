@@ -7,6 +7,8 @@ import * as path from 'path';
 import { Client } from './client/client.model'
 import { User } from './user/user.model'
 import { Operator } from './operator/operator.model'
+import { Review } from './review/review.model'
+import { Favorite } from './favorite/favorite.model'
 
 import { UserModule } from './user/user.module'
 import { AuthModule } from './auth/auth.module'
@@ -14,6 +16,7 @@ import { ClientModule } from './client/client.module'
 import { OperatorModule } from './operator/operator.module'
 import { GatewayModule } from './gateway/gateway.module'
 import { CallModule } from './call/call.module'
+import { ReviewModule } from './review/review.module'
 
 @Module({
   imports: [
@@ -33,7 +36,9 @@ import { CallModule } from './call/call.module'
       entities: [
         Client,
         User,
-        Operator
+        Operator,
+        Review,
+        Favorite
       ],
       subscribers: ['dist/subscriber/*.js'],
       migrations: ['dist/migration/*.js'],
@@ -45,7 +50,9 @@ import { CallModule } from './call/call.module'
     OperatorModule,
     GatewayModule,
     CallModule,
+    ReviewModule
   ],
   providers: [AppModule],
 })
+
 export class AppModule {}

@@ -3,7 +3,7 @@ import {
     Column,
     OneToMany,
     DeleteDateColumn,
-    ManyToMany,
+    ManyToOne,
     PrimaryGeneratedColumn,
     JoinColumn,
     OneToOne
@@ -15,12 +15,20 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { User } from '../user/user.model'
 
 @Entity()
-export class Client extends AppEntity {
+export class Favorite extends AppEntity {
+
     @ApiProperty({
         type: () => User,
     })
-    @OneToOne(() => User)
-    @JoinColumn()
-    user: User;
+    @ManyToOne(() => User, (user) => user.favorite)
+    operator: User;
+
+    @ApiProperty()
+    @Column()
+    operatorId: number;
+
+    @ApiProperty()
+    @Column()
+    userId: number;
 
 }

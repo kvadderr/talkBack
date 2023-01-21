@@ -20,12 +20,6 @@ export class Operator extends AppEntity {
     @Column({
         default: 0
     })
-    balance: number;
-
-    @ApiProperty()
-    @Column({
-        default: 0
-    })
     price: number;
 
     @ApiProperty()
@@ -33,6 +27,24 @@ export class Operator extends AppEntity {
         default: 0
     })
     percent: number;
+
+    @ApiProperty()
+    @Column({
+        nullable: true
+    })
+    brief: string;
+
+    @ApiProperty()
+    @Column({
+        nullable: true
+    })
+    aboutMe: string;
+
+    @ApiProperty()
+    @Column({
+        nullable: true
+    })
+    goals: string;
 
     @ApiProperty({
         type: () => User,
