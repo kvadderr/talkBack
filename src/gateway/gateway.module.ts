@@ -7,5 +7,6 @@ import { CallModule } from '../call/call.module'
         forwardRef(() => CallModule),
       ],
     providers: [MyGateway],
+    exports: [GatewayModule],
 })
 export class GatewayModule {}

@@ -6,7 +6,8 @@ import {
     ManyToMany,
     PrimaryGeneratedColumn,
     JoinColumn,
-    OneToOne
+    OneToOne,
+    ManyToOne
 } from 'typeorm';
 
 import { AppEntity } from '../base/BaseEntity';
@@ -20,7 +21,7 @@ export class Review extends AppEntity {
     @ApiProperty({
         type: () => User,
     })
-    @OneToOne(() => User)
+    @ManyToOne(() => User)
     @JoinColumn()
     client: User;
 

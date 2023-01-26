@@ -6,13 +6,15 @@ import {
     ManyToMany,
     PrimaryGeneratedColumn,
     JoinColumn,
-    OneToOne
+    OneToOne,
+    ManyToOne
 } from 'typeorm';
 
 import { AppEntity } from '../base/BaseEntity';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 import { User } from '../user/user.model'
+import { Specialization } from '../specialization/specialization.model'
 
 @Entity()
 export class Operator extends AppEntity {
@@ -52,5 +54,12 @@ export class Operator extends AppEntity {
     @OneToOne(() => User)
     @JoinColumn()
     user: User;
+
+    @ApiProperty({
+        type: () => Specialization,
+    })
+    @ManyToOne(() => Specialization)
+    @JoinColumn()
+    specialization?: Specialization[];
 
 }

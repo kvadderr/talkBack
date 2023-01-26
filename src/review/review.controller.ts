@@ -6,7 +6,8 @@ import {
     Param,
     Put,
     UseGuards,
-    Query
+    Query,
+    Post
   } from '@nestjs/common';
 
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -30,6 +31,13 @@ export class ReviewController {
   @Get('/grade/:operatorId')
   getOperatorGrade(@Param('operatorId') operatorId: number) {
     return this.reviewService.getRating(operatorId);
+  }
+
+  @ApiOperation({ summary: "Add review" })
+  @ApiResponse({ status: 200, type: Review })
+  @Post()
+  addFavorite(@Body() data) {
+    return this.reviewService.create(data);
   }
 
 }

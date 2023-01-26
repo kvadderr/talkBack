@@ -49,4 +49,37 @@ export class AuthController {
     );
   }
 
+  @ApiOperation({ summary: 'Сброс пароля' })
+  @ApiResponse({ status: 200, type: CreateUserDto })
+  @Post('/restorePassword')
+  async restore(
+    @Body() data
+  ) {
+    return await this.authService.restorePassword(
+        data
+    );
+  }
+
+  @ApiOperation({ summary: 'Отправка кода подтверждения' })
+  @ApiResponse({ status: 200, type: CreateUserDto })
+  @Post('/sendCode')
+  async sendCode(
+    @Body() data
+  ) {
+    return await this.authService.sendConfirmCodeEmail(
+        data.userId
+    );
+  }
+
+  @ApiOperation({ summary: 'Подтверждение кода подтверждения' })
+  @ApiResponse({ status: 200, type: CreateUserDto })
+  @Post('/confirm')
+  async comfirmMail(
+    @Body() data
+  ) {
+    return await this.authService.confirmProfile(
+        data
+    );
+  }
+
 }

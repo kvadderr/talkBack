@@ -17,7 +17,7 @@ export class OperatorService {
 
   async getAllOperator(): Promise<Operator[] | []> {
     return this.operatorRepository.find({
-      relations: ['user'],
+      relations: ['user', 'specialization'],
     });
   }
 

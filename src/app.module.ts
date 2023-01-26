@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 import * as path from 'path';
 
@@ -9,6 +10,9 @@ import { User } from './user/user.model'
 import { Operator } from './operator/operator.model'
 import { Review } from './review/review.model'
 import { Favorite } from './favorite/favorite.model'
+import { Specialization } from './specialization/specialization.model'
+import { Call } from './call/call.model'
+import { Support } from './support/support.model'
 
 import { UserModule } from './user/user.module'
 import { AuthModule } from './auth/auth.module'
@@ -17,12 +21,24 @@ import { OperatorModule } from './operator/operator.module'
 import { GatewayModule } from './gateway/gateway.module'
 import { CallModule } from './call/call.module'
 import { ReviewModule } from './review/review.module'
+import { FavoriteModule } from './favorite/favorite.module'
+import { MailModule } from './mailer/mail.module'
+import { SupportModule } from './support/support.module'
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env`,
+    }),
+    MailerModule.forRoot({
+      transport: {
+        service: process.env.MAILER_SERVICE,
+        auth: {
+          user: process.env.MAILER_USER,
+          pass: process.env.MAILER_PASSWORD,
+        },
+      },
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -38,7 +54,10 @@ import { ReviewModule } from './review/review.module'
         User,
         Operator,
         Review,
-        Favorite
+        Favorite,
+        Specialization,
+        Call,
+        Support
       ],
       subscribers: ['dist/subscriber/*.js'],
       migrations: ['dist/migration/*.js'],
@@ -50,7 +69,10 @@ import { ReviewModule } from './review/review.module'
     OperatorModule,
     GatewayModule,
     CallModule,
-    ReviewModule
+    ReviewModule,
+    FavoriteModule,
+    MailModule,
+    SupportModule
   ],
   providers: [AppModule],
 })

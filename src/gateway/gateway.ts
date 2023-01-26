@@ -8,16 +8,18 @@ import { CallService } from '../call/call.service';
 @WebSocketGateway()
 @Injectable()
 export class MyGateway implements OnModuleInit {
-    private callService: CallService
-    constructor(private moduleRef: ModuleRef) {}
+    constructor(
+        private callService: CallService,
+        private moduleRef: ModuleRef
+    ) {}
 
     @WebSocketServer()
     server: Server;
 
     async onModuleInit() {
 
-        this.callService = await this.moduleRef.create(CallService);
         const clSer = this.callService;
+
         this.server.on('connection', (socket) => {
 
             socket.on('join', function (data) {
@@ -26,7 +28,7 @@ export class MyGateway implements OnModuleInit {
             });
 
             socket.on('connectionRequest', async function (data) {
-                console.log(data);
+                console.log('dataARIEL', data);
                 const operatorFIO = data.operatorFIO;
                 const clientFIO = data.clientFIO;
                 const channelName = operatorFIO + 'data'+clientFIO;
@@ -35,8 +37,11 @@ export class MyGateway implements OnModuleInit {
                 console.log(tokenA);
                 socket.in(data.operatorFIO).emit('new_msg', 
                     {
+                        clientAvatar: data.avatar,
                         operatorFIO: operatorFIO,
                         clientFIO: clientFIO,
+                        clientId: data.clientId,
+                        operatorId: data.operatorId,
                         token: tokenA,
                         channelName: channelName
                     }
@@ -54,9 +59,14 @@ export class MyGateway implements OnModuleInit {
                 );
             });
 
-            socket.on('connectionLeave', function (data) {
+            socket.on('connectionLeave', async function (data) {
                 console.log('setData', data);
                 socket.in(data.opponentFIO).emit('leaveChannel');
+            });
+
+            socket.on('connectionEnd', async function (data) {
+                console.log('setData', data);
+                const call = await clSer.saveCall(data);
             });
 
         });

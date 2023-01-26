@@ -12,24 +12,24 @@ import {
 import { AppEntity } from '../base/BaseEntity';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { Operator } from '../operator/operator.model'
+import { User } from '../user/user.model'
 
 @Entity()
-export class Favorite extends AppEntity {
+export class Support extends AppEntity {
 
     @ApiProperty({
-        type: () => Operator,
+        type: () => User,
     })
-    @OneToOne(() => Operator)
+    @ManyToOne(() => User)
     @JoinColumn()
-    operator: Operator;
-
-    @ApiProperty()
-    @Column()
-    operatorId: number;
+    user: User;
 
     @ApiProperty()
     @Column()
     userId: number;
+
+    @ApiProperty()
+    @Column()
+    message: string;
 
 }

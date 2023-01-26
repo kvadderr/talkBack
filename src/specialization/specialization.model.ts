@@ -15,12 +15,12 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Operator } from '../operator/operator.model'
 
 @Entity()
-export class Favorite extends AppEntity {
+export class Specialization extends AppEntity {
 
     @ApiProperty({
         type: () => Operator,
     })
-    @OneToOne(() => Operator)
+    @ManyToOne(() => Operator, (operator) => operator.specialization)
     @JoinColumn()
     operator: Operator;
 
@@ -30,6 +30,6 @@ export class Favorite extends AppEntity {
 
     @ApiProperty()
     @Column()
-    userId: number;
+    name: string;
 
 }

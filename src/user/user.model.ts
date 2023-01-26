@@ -56,7 +56,12 @@ export class User extends AppEntity {
     banCause: string;
 
     @OneToMany(() => Favorite, (favorite) => favorite.operator) 
-    @JoinColumn({name: "favorite_id"})   
+    @JoinColumn({name: "userId"})
     favorite: Favorite[]
 
+    @ApiProperty()
+    @Column({
+        default: false
+    })
+    isSuccessful: boolean;
 }

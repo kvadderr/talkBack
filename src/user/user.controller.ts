@@ -24,4 +24,11 @@ export class UserController {
         return this.userService.getAll();
     }
 
+    @ApiOperation({ summary: 'Get me info' })
+    @ApiResponse({ status: 200, type: User })
+    @Get('/:id')
+    getMe(@Param('id') id: number) {
+        return this.userService.getMe(id);
+    }
+
 }
