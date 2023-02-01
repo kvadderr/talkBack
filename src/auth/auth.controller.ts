@@ -82,4 +82,26 @@ export class AuthController {
     );
   }
 
+  @ApiOperation({ summary: 'Подтверждение кода подтверждения' })
+  @ApiResponse({ status: 200, type: CreateUserDto })
+  @Post('/updateBaseData')
+  async updateBaseData(
+    @Body() data
+  ) {
+    return await this.authService.updateBaseData(
+        data
+    );
+  }
+
+  @ApiOperation({ summary: 'Подтверждение кода подтверждения' })
+  @ApiResponse({ status: 200, type: CreateUserDto })
+  @Post('/ban')
+  async banUser(
+    @Body() data
+  ) {
+    return await this.authService.banUser(
+        data
+    );
+  }
+
 }

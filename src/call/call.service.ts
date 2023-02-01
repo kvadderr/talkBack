@@ -11,9 +11,6 @@ const appCertificate = 'b3fc4f5d990a47a8a1ce223514add751';
 const uid = 0;
 const userAccount = "User account";
 const role = RtcRole.PUBLISHER;
-const expirationTimeInSeconds = 3600;
-const currentTimestamp = Math.floor(Date.now() / 1000);
-const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
 
 @Injectable()
 export class CallService {
@@ -23,8 +20,11 @@ export class CallService {
   ) {}
 
   async generateToken(channelName: string) {
+    const expirationTimeInSeconds = 3600;
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
+
     const tokenA = RtcTokenBuilder.buildTokenWithUid(appId, appCertificate, channelName, uid, role, privilegeExpiredTs);
-    console.log("Token with integer number Uid: " + tokenA);
     return tokenA;
   }
 

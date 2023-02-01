@@ -54,6 +54,17 @@ export class UserService {
 
     }
 
+    async updateAvatar(data){
+      const id = data.userId;
+      const user = await this.userRepository.findOne({
+        where: { id }
+      });
+  
+      user.avatar = data.filename;
+      return await this.userRepository.save(user);
+  
+    }
+
     async getMe(id: number) {
 
       const user = await this.userRepository.findOne({
@@ -62,6 +73,24 @@ export class UserService {
 
       return user;
 
+    }
+
+    async populateBalance(id: number, newBalance: number) {
+      const user = await this.userRepository.findOne({
+        where: { id },
+      });
+
+      user.balance = user.balance + newBalance;
+      return await this.userRepository.save(user);
+    }
+
+    async minusBalance(id: number, newBalance: number) {
+      const user = await this.userRepository.findOne({
+        where: { id },
+      });
+
+      user.balance = user.balance - newBalance;
+      return await this.userRepository.save(user);
     }
 
 }

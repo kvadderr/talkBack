@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { MulterModule } from '@nestjs/platform-express';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 import * as path from 'path';
 
@@ -24,12 +26,19 @@ import { ReviewModule } from './review/review.module'
 import { FavoriteModule } from './favorite/favorite.module'
 import { MailModule } from './mailer/mail.module'
 import { SupportModule } from './support/support.module'
+import { join } from 'path';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env`,
+    }),
+    MulterModule.register({
+      dest: './uploads'
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'), 
     }),
     MailerModule.forRoot({
       transport: {

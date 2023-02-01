@@ -7,7 +7,13 @@ import {
     Patch,
     Post,
     UseGuards,
+    UseInterceptors,
+    Res,
+    UploadedFile
   } from '@nestjs/common';
+  import { FileInterceptor } from '@nestjs/platform-express';
+  import { diskStorage } from 'multer';
+  import { extname } from 'path';
   import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
   import { UserService } from './user.service';
   import { User } from './user.model'
@@ -30,5 +36,39 @@ export class UserController {
     getMe(@Param('id') id: number) {
         return this.userService.getMe(id);
     }
+
+    @ApiOperation({ summary: 'Обновление аватара пользователя' })
+    @ApiResponse({ status: 200 })
+    @Post('/updateAvatar')
+    async updateAvatar(
+        @Body() data
+    ) {
+        return await this.userService.updateAvatar(
+            data
+        );
+    }
+
+    @ApiOperation({ summary: 'uploadPhoto' })
+    @ApiResponse({ status: 200 })
+    @Post('/uploadPhoto')
+    @UseInterceptors(FileInterceptor('image', {
+        storage: diskStorage({
+            destination: './uploads',
+            filename: (req, file, callback) => {
+            console.log('filenamess');
+            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+            const ext = extname(file.originalname);
+            const filename = `${uniqueSuffix}${ext}`;
+            callback(null, filename);
+            },
+        }),
+    }))
+    upload(@UploadedFile() file) {
+        const fileName = file.filename;
+        console.log(fileName);
+        return {fileName};
+    }
+
+    
 
 }

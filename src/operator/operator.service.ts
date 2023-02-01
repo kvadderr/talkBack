@@ -21,8 +21,31 @@ export class OperatorService {
     });
   }
 
-  async createOperator(operator: Partial<Operator>): Promise<Operator> {
+  async getTopOperator(){
+    const [data, total] = await this.operatorRepository.findAndCount({
+      take: 3,
+      skip: 1,
+      relations: ['user', 'specialization'],
+    });
+
+    return data;
+  }
+
+  async createOperator(operator: Operator) {
     return this.operatorRepository.save({ ...operator });
+  }
+
+  async updateData(data){
+    const userId = data.userId;
+    const operator = await this.operatorRepository.findOne({
+      where: { userId }
+    });
+
+    operator.brief = data.brief;
+    operator.aboutMe = data.aboutMe;
+    operator.goals = data.goals;
+    return await this.operatorRepository.save(operator);
+
   }
 
 }

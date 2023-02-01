@@ -62,4 +62,7 @@ export class Operator extends AppEntity {
     @JoinColumn()
     specialization?: Specialization[];
 
+    @ApiProperty()
+    @Column()
+    userId: number;
 }

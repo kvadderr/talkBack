@@ -96,9 +96,25 @@ export class AuthService {
     user.password = code+'_new';
     const sendMa = await this.mailService.sendForgotPassword(user.login, user.password);
     const updateUser = await this.usersService.create(user);
-
     return updateUser;
 
+  }
+
+  async updateBaseData(data){
+    const user = await this.usersService.getUserByEmail(data.login);
+    user.FIO = data.FIO;
+    user.password = data.password; 
+    user.birth = data.years; 
+    const updateUser = await this.usersService.create(user);
+    return updateUser;
+  }
+
+  async banUser(data){
+    const user = await this.usersService.getUserByEmail(data.login);
+    user.isBanned = 1;
+    user.banCause = data.cause; 
+    const updateUser = await this.usersService.create(user);
+    return updateUser;
   }
 
   async statistic(data){

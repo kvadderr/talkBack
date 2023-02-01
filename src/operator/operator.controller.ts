@@ -21,8 +21,22 @@ export class OperatorController {
   @ApiOperation({ summary: 'Get all operator' })
   @ApiResponse({ status: 200, type: [Operator] })
   @Get()
-  getAllOperator() {
-    return this.operatorService.getAllOperator();
+  async getAllOperator() {
+    return await this.operatorService.getAllOperator();
+  }
+
+  @ApiOperation({ summary: 'Get all operator' })
+  @ApiResponse({ status: 200, type: [Operator] })
+  @Get('/top')
+  async getTopOperator() {
+    return await this.operatorService.getTopOperator();
+  }
+
+  @ApiOperation({ summary: 'Update operator data' })
+  @ApiResponse({ status: 200, type: [Operator] })
+  @Put()
+  async updateOperator(@Body() data) {
+    return await this.operatorService.updateData(data);
   }
 
 }
