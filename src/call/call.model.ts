@@ -43,4 +43,20 @@ export class Call extends AppEntity {
     @Column()
     duration: number;
 
+    @ApiProperty()
+    @Column({
+        default: 0,
+        type: 'numeric', 
+        precision: 10, 
+        scale: 2 })
+    cost: number;
+
+    @ApiProperty()
+    @Column({
+        default: 0,
+        type: 'numeric', 
+        precision: 10, 
+        scale: 2})
+    companyCost: number;
+
 }

@@ -45,7 +45,10 @@ export class User extends AppEntity {
 
     @ApiProperty()
     @Column({
-        default: 100
+        default: 100,
+        type: 'numeric', 
+        precision: 10, 
+        scale: 2 
     })
     balance: number;
 

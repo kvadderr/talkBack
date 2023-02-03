@@ -80,7 +80,9 @@ export class UserService {
         where: { id },
       });
 
-      user.balance = user.balance + newBalance;
+      console.log(user.balance);
+      console.log(newBalance);
+      user.balance = +user.balance + +newBalance;
       return await this.userRepository.save(user);
     }
 
@@ -89,7 +91,7 @@ export class UserService {
         where: { id },
       });
 
-      user.balance = user.balance - newBalance;
+      user.balance = +user.balance - +newBalance;
       return await this.userRepository.save(user);
     }
 

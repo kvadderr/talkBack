@@ -6,6 +6,7 @@ import {
     Param,
     Put,
     UseGuards,
+    Post
   } from '@nestjs/common';
   import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -37,6 +38,14 @@ export class OperatorController {
   @Put()
   async updateOperator(@Body() data) {
     return await this.operatorService.updateData(data);
+  }
+
+  @ApiOperation({ summary: 'Update operator data' })
+  @ApiResponse({ status: 200, type: [Operator] })
+  @Post()
+  async saveOperator(@Body() data) {
+    console.log(data);
+    return await this.operatorService.createOperator(data.editingOperator);
   }
 
 }

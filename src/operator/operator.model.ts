@@ -20,7 +20,9 @@ import { Specialization } from '../specialization/specialization.model'
 export class Operator extends AppEntity {
     @ApiProperty()
     @Column({
-        default: 0
+        default: 0,
+        type: 'numeric', 
+        precision: 10, scale: 2 
     })
     price: number;
 

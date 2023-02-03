@@ -15,6 +15,9 @@ import { Favorite } from './favorite/favorite.model'
 import { Specialization } from './specialization/specialization.model'
 import { Call } from './call/call.model'
 import { Support } from './support/support.model'
+import { FAQ } from './faq/faq.model'
+import { Traffic } from './traffic/traffic.model'
+import { Payment } from './payment/payment.model'
 
 import { UserModule } from './user/user.module'
 import { AuthModule } from './auth/auth.module'
@@ -26,6 +29,11 @@ import { ReviewModule } from './review/review.module'
 import { FavoriteModule } from './favorite/favorite.module'
 import { MailModule } from './mailer/mail.module'
 import { SupportModule } from './support/support.module'
+import { FAQModule } from './faq/faq.module'
+import { TrafficModule } from './traffic/traffic.module'
+import { PaymentModule } from './payment/payment.module'
+import { AnalyticsModule } from './analytics/analytics.module'
+
 import { join } from 'path';
 
 @Module({
@@ -66,7 +74,10 @@ import { join } from 'path';
         Favorite,
         Specialization,
         Call,
-        Support
+        Support,
+        Traffic,
+        FAQ,
+        Payment
       ],
       subscribers: ['dist/subscriber/*.js'],
       migrations: ['dist/migration/*.js'],
@@ -81,7 +92,11 @@ import { join } from 'path';
     ReviewModule,
     FavoriteModule,
     MailModule,
-    SupportModule
+    SupportModule,
+    FAQModule,
+    TrafficModule,
+    PaymentModule,
+    AnalyticsModule
   ],
   providers: [AppModule],
 })

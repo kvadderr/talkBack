@@ -111,7 +111,7 @@ export class AuthService {
 
   async banUser(data){
     const user = await this.usersService.getUserByEmail(data.login);
-    user.isBanned = 1;
+    user.isBanned = data.isBanned;
     user.banCause = data.cause; 
     const updateUser = await this.usersService.create(user);
     return updateUser;
