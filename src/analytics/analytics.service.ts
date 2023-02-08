@@ -122,5 +122,26 @@ export class AnalyticsService {
       GROUP BY us.id, us.login, us."FIO", us.balance, operator.percent, operator.price')
  }
 
+ async getTrafficAnal(startDay: string, role: string) {
+    return this.dataSource.query('SELECT f.alluser, p.tim\
+    FROM (\
+      SELECT \
+        date_trunc(\'hour\',traffic."createdAt")::time \
+        AS time, count(traffic."userId") as allUser \
+      FROM traffic, public."user" as u \
+      WHERE  \
+      u.id = traffic."userId" AND \
+		  u.role = \''+role+'\' AND \
+      traffic."createdAt"::date = \''+startDay+'\' \
+      GROUP BY 1 ) as f \
+    RIGHT JOIN  \
+      (SELECT date_trunc(\'hour\', hh):: time as tim \
+    FROM generate_series \
+            ( \'2023-02-01 00:00:00.0000\'::timestamp \
+            , \'2023-02-01 23:00:00.00000\'::timestamp \
+            , \'1 hour\'::interval) hh \
+            ) as p ON p.tim = f.time')
+ }
+
 
 }

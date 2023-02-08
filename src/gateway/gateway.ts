@@ -41,14 +41,29 @@ export class MyGateway implements OnModuleInit {
 
         this.server.on('connection', (socket) => {
 
+            console.log('connection');
+
             socket.on('join', function (data) {
                 console.log('user joined with ID - ', data.userId)
                 socket.join(data.userId); 
-                onlineOperatorList.push(data.userId);
                 users[socket.id] = data.userId;
                 startSession[socket.id] = new Date();
-                this.server.emit('listOnlineUser', onlineOperatorList);
             });
+
+            socket.on('onlineStatus', function (userId) {
+                onlineOperatorList.push(userId);
+                this.server.emit('listOnlineUser', onlineOperatorList);
+                console.log(onlineOperatorList);
+            })
+
+            socket.on('offlineStatus', function (userId) {
+                const index = onlineOperatorList.indexOf(userId);
+                if (index > -1) {
+                    onlineOperatorList.splice(index, 1);
+                }
+                this.server.emit('listOnlineUser', onlineOperatorList);
+                console.log(onlineOperatorList);
+            })
 
             socket.on('connectionRequest', async function (data) {
 
@@ -70,9 +85,8 @@ export class MyGateway implements OnModuleInit {
                     }
                 );
             });
-
+ 
             socket.on('connectionConfirmation', function (data) {
-
                 this.server.in(data.operatorId).in(data.clientId).emit('connectionConfirmation', 
                     {
                         token: data.token,
@@ -135,7 +149,10 @@ export class MyGateway implements OnModuleInit {
                     duration: Math.floor(onlineDuration)
                 }
                 const saveTraffic = await trafficSer.create(data);
-                onlineOperatorList = onlineOperatorList.filter((n) => {return n != users[socket.id]});
+                const index = onlineOperatorList.indexOf(users[socket.id]);
+                if (index > -1) {
+                    onlineOperatorList.splice(index, 1);
+                }
                 this.server.emit('listOnlineUser', onlineOperatorList);
                 console.log('tiiips', socket.id);
                 console.log('user id - ', users[socket.id])

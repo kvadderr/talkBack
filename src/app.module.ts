@@ -18,6 +18,7 @@ import { Support } from './support/support.model'
 import { FAQ } from './faq/faq.model'
 import { Traffic } from './traffic/traffic.model'
 import { Payment } from './payment/payment.model'
+import { Withdrawals } from './withdrawals/withdrawals.model'
 
 import { UserModule } from './user/user.module'
 import { AuthModule } from './auth/auth.module'
@@ -33,6 +34,7 @@ import { FAQModule } from './faq/faq.module'
 import { TrafficModule } from './traffic/traffic.module'
 import { PaymentModule } from './payment/payment.module'
 import { AnalyticsModule } from './analytics/analytics.module'
+import { WithdrawalsModule } from './withdrawals/withdrawals.module'
 
 import { join } from 'path';
 
@@ -77,7 +79,8 @@ import { join } from 'path';
         Support,
         Traffic,
         FAQ,
-        Payment
+        Payment,
+        Withdrawals
       ],
       subscribers: ['dist/subscriber/*.js'],
       migrations: ['dist/migration/*.js'],
@@ -96,7 +99,8 @@ import { join } from 'path';
     FAQModule,
     TrafficModule,
     PaymentModule,
-    AnalyticsModule
+    AnalyticsModule,
+    WithdrawalsModule
   ],
   providers: [AppModule],
 })

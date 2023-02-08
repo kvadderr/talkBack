@@ -48,6 +48,15 @@ export class UserController {
         );
     }
 
+    @ApiOperation({ summary: 'Обновление аватара пользователя' })
+    @ApiResponse({ status: 200 })
+    @Post('/populate')
+    populate(@Body() data) {
+        return this.userService.populateBalance(
+            data.id, data.balance
+        );
+    }
+
     @ApiOperation({ summary: 'uploadPhoto' })
     @ApiResponse({ status: 200 })
     @Post('/uploadPhoto')
