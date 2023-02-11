@@ -24,6 +24,12 @@ export class User extends AppEntity {
     password: string;
 
     @ApiProperty()
+    @Column({
+        nullable: true
+    })
+    isPassword: string;
+
+    @ApiProperty()
     @Column()
     FIO: string;
 

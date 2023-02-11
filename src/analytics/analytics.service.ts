@@ -143,5 +143,81 @@ export class AnalyticsService {
             ) as p ON p.tim = f.time')
  }
 
+ async getOperatorStat(operatorId: number) {
+    const avgRaitConst = await this.avgRaiting(operatorId);
+    const favoriteCountConst = await this.favoriteCount(operatorId);
+    const callForTodayCount = await this.callForToday(operatorId);
+    const callForWeekConst = await this.callForWeek(operatorId);
+    const callForMonthConst = await this.callForMonth(operatorId);
+    const moneyConst = await this.getMoney(operatorId);
+    
+    console.log('avgRaitConst', avgRaitConst);
+    console.log('favoriteCountConst', favoriteCountConst);
+    console.log('callForTodayCount', callForTodayCount);
+    console.log('callForWeekConst', callForWeekConst);
+    console.log('callForMonthConst', callForMonthConst);
+    console.log('moneyConst', moneyConst);
+
+    const data = {
+      avgRaitConst: Math.floor(avgRaitConst[0].avg*100)/100,
+      favoriteCountConst: favoriteCountConst[0].count,
+      callForTodayCount: callForTodayCount[0].count,
+      callForWeekConst: callForWeekConst[0].count,
+      callForMonthConst: callForMonthConst[0].count,
+      moneyConst: moneyConst[0].sum,
+    };
+
+    return data;
+
+ }
+
+ async avgRaiting(operatorId: number) {
+  return this.dataSource.query(
+    'SELECT AVG(review."grade") FROM review \
+     WHERE review."operatorId" = ' + operatorId
+  );
+ }
+
+ async favoriteCount(operatorId: number) {
+  return this.dataSource.query(
+  'SELECT count(*) FROM favorite' +
+  ' WHERE favorite."operatorId" =' + operatorId
+  );
+
+ }
+
+ async callForToday(operatorId: number) {
+  return this.dataSource.query(
+    'SELECT count(*) FROM call \
+      WHERE call."createdAt" >= date_trunc(\'day\',current_timestamp - interval \'1 day\') \
+      AND call."createdAt" <  date_trunc(\'day\',current_timestamp) + interval \'1 day\' \
+      AND call."operatorId" = ' + operatorId 
+  );
+ }
+
+ async callForWeek(operatorId: number) {
+  return this.dataSource.query(
+    'SELECT count(*) FROM call \
+      WHERE call."createdAt" >= date_trunc(\'day\',current_timestamp - interval \'7 day\') \
+      AND call."createdAt" <  date_trunc(\'day\',current_timestamp) + interval \'1 day\' \
+      AND call."operatorId" = ' + operatorId 
+  );
+ }
+
+ async callForMonth(operatorId: number) {
+  return this.dataSource.query(
+    'SELECT count(*) FROM call \
+      WHERE call."createdAt" >= date_trunc(\'day\',current_timestamp - interval \'30 day\') \
+      AND call."createdAt" <  date_trunc(\'day\',current_timestamp) + interval \'1 day\'\
+      AND call."operatorId" = ' + operatorId 
+  );
+ }
+
+ async getMoney(operatorId: number) {
+    return this.dataSource.query(
+      'SELECT SUM(call."cost") FROM call' + 
+      ' WHERE call."operatorId" = ' + operatorId
+    );
+ }
 
 }

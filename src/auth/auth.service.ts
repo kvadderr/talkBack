@@ -13,6 +13,9 @@ import { UserService } from '../user/user.service'
 import { ClientService } from '../client/client.service'
 import { OperatorService } from '../operator/operator.service'
 import { MailService } from '../mailer/mail.service'
+import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from 'bcrypt';
+
 
 import { User } from '../user/user.model'
 import { Client } from '../client/client.model'
@@ -25,11 +28,12 @@ export class AuthService {
     private clientService: ClientService,
     private operatorService: OperatorService,
     private mailService: MailService,
+    private jwtService: JwtService
   ) {}
 
-  async login(dto){
+  async login(dto, response){
     console.log(dto);
-    let candidate = await this.usersService.getUserByEmailAndPass(dto.login, dto.password);
+    let candidate = await this.usersService.getUserByEmailAndPass(dto.login);
     if (!candidate) {
       throw new HttpException(
         'Неверные данные авторизации',
@@ -37,13 +41,32 @@ export class AuthService {
       );
     };
 
+    if (!await bcrypt.compare(dto.password, candidate.password)) {
+      throw new HttpException('Неверные данные авторизацииss', HttpStatus.BAD_REQUEST);
+    }
+
     if (candidate.isBanned === 1) {
       throw new HttpException(
         candidate.banCause,
         HttpStatus.BAD_REQUEST,
       );
     }
+    const jwt = await this.jwtService.signAsync({id: candidate.id}, {secret: 'secret'});
+    response.cookie('jwt', jwt, {httpOnly: true});
     return candidate;
+  }
+
+  async getMe(request) {
+    const cookie = request.cookies['jwt'];
+    const data = await this.jwtService.verifyAsync(cookie, {secret: 'secret'});
+    if (!data) {
+      throw new UnauthorizedException();
+    }
+
+    const user = await this.usersService.getMe(data['id']);
+    const {password, ...result} = user;
+  
+    return result;
   }
 
   async signup(dto) {
@@ -55,6 +78,9 @@ export class AuthService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    dto.isPassword = dto.password;
+    dto.password = await bcrypt.hash(dto.password, 12);
+    
     const user = await this.usersService.create(dto);
     console.log(user);
     const data = {
@@ -63,7 +89,7 @@ export class AuthService {
     }
     if (dto.role === 'CLIENT' ) { const client = await this.clientService.createClient(data); }
     if (dto.role === 'OPERATOR' ) { const operator = await this.operatorService.createOperator(data); }
-    
+    delete user.password;
     return user;
   }
 

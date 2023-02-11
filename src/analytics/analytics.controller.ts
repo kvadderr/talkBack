@@ -53,6 +53,14 @@ export class AnalyticsController {
   getClientTraffic(@Param('startDay') startDay: string) {
     return this.analyticsService.getTrafficAnal(startDay, 'CLIENT');
   }
+
+  @ApiOperation({ summary: "Get call history by operator" })
+  @ApiResponse({ status: 200 })
+  @Get('/operatorStat/:operatorId')
+  getOperatorStat(@Param('operatorId') operatorId: number) {
+    console.log('operatorId', operatorId);
+    return this.analyticsService.getOperatorStat(operatorId);
+  }
  
 
 }

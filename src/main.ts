@@ -7,12 +7,12 @@ import { join } from 'path';
 async function bootstrap() {
   const PORT = process.env.PORT;
   const app = await NestFactory.create(AppModule);
-  app.enableCors({
-    origin: true,
-    credentials: true,
-  });
   app.use(cookieParser());
-
+  app.enableCors({
+    origin: 'http://127.0.0.1:5174',
+    credentials: true
+  });
+  
   const http = require("http").Server(app);
   const version = '1.0.0';
 

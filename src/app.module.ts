@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MulterModule } from '@nestjs/platform-express';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { JwtModule } from "@nestjs/jwt";
 
 import * as path from 'path';
 
@@ -58,6 +59,10 @@ import { join } from 'path';
           pass: process.env.MAILER_PASSWORD,
         },
       },
+    }),
+    JwtModule.register({
+      secret: 'secret',
+      signOptions: {expiresIn: '1d'}
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',

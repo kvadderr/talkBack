@@ -36,16 +36,24 @@ export class AuthController {
     );
   }
 
+  @ApiOperation({ summary: 'Get me' })
+  @ApiResponse({ status: 200, type: CreateUserDto })
+  @Get('/me')
+  getAllClient(@Req() request: Request) {
+    return this.authService.getMe(request);
+  }
+
   @ApiOperation({ summary: 'Авторизация' })
   @ApiBody({ type: CreateUserDto })
   @ApiResponse({ status: 200, type: CreateUserDto })
   @Post('/signin')
   async signin(
     @Body() data,
+    @Res({passthrough: true}) response: Response,
     @Headers() headers: Record<string, string>,
   ) {
     return await this.authService.login(
-        data,
+        data, response
     );
   }
 

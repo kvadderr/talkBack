@@ -44,10 +44,10 @@ export class UserService {
 
     }
 
-    async getUserByEmailAndPass(login: string, password: string) {
+    async getUserByEmailAndPass(login: string) {
 
       const user = await this.userRepository.findOne({
-        where: { login, password },
+        where: { login},
       });
 
       return user;

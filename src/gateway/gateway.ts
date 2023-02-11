@@ -10,7 +10,7 @@ import { TrafficService } from '../traffic/traffic.service';
 import { Traffic } from '../traffic/traffic.model';
 
 
-@WebSocketGateway()
+@WebSocketGateway({cors: true})
 @Injectable()
 export class MyGateway implements OnModuleInit {
     constructor(
@@ -41,13 +41,17 @@ export class MyGateway implements OnModuleInit {
 
         this.server.on('connection', (socket) => {
 
-            console.log('connection');
+            console.log('connection', socket.id);
 
             socket.on('join', function (data) {
                 console.log('user joined with ID - ', data.userId)
                 socket.join(data.userId); 
                 users[socket.id] = data.userId;
                 startSession[socket.id] = new Date();
+                
+                console.log('JOIN COSOKET', socket.id);
+                console.log('startSession[socket.id]', startSession[socket.id]);
+                console.log('users[socket.id]', users[socket.id]);
             });
 
             socket.on('onlineStatus', function (userId) {
@@ -57,10 +61,15 @@ export class MyGateway implements OnModuleInit {
             })
 
             socket.on('offlineStatus', function (userId) {
+
+                let newList = onlineOperatorList.filter((n) => {console.log('n=', n); return n != userId})
+                /*
                 const index = onlineOperatorList.indexOf(userId);
                 if (index > -1) {
                     onlineOperatorList.splice(index, 1);
                 }
+                */
+                onlineOperatorList = newList;
                 this.server.emit('listOnlineUser', onlineOperatorList);
                 console.log(onlineOperatorList);
             })
@@ -87,12 +96,14 @@ export class MyGateway implements OnModuleInit {
             });
  
             socket.on('connectionConfirmation', function (data) {
+                console.log('connectionConfirmation', data)
                 this.server.in(data.operatorId).in(data.clientId).emit('connectionConfirmation', 
                     {
                         token: data.token,
                         channelName: data.channelName
                     }
                 );
+                
                 currentBalance = balance[data.clientId];
                 clearInterval(timers[data.clientId]);
                 timers[data.clientId] = setInterval(() => {
@@ -112,7 +123,9 @@ export class MyGateway implements OnModuleInit {
                 clearInterval(timers[data.clientId]);
                 i = 0 ;
                 const blnc = Math.floor((balance[data.clientId] - currentBalance) * 100) /100;
-                console.log('currentBalance', blnc);
+                console.log('blnc', blnc);
+                console.log('balance[data.clientId]', balance[data.clientId]);
+                console.log('currentBalance', currentBalance);
                 const percent = 12;
                 const companyCost = percent * blnc/100;
                 const cost = blnc - companyCost;
@@ -141,22 +154,27 @@ export class MyGateway implements OnModuleInit {
 
             socket.on('disconnect', async function () {
                 const isThisMoment = new Date();
+                console.log('DISCONNECT', socket.id);
                 
-                const onlineDuration = Math.floor(isThisMoment.valueOf() - startSession[socket.id].valueOf()) / 1000;
-                console.log(onlineOperatorList);
-                const data = {
-                    userId: users[socket.id], 
-                    duration: Math.floor(onlineDuration)
+                if (startSession[socket.id]){
+                    console.log('DISCONNECT startSession[socket.id]', startSession[socket.id]);
+                    const onlineDuration = Math.floor(isThisMoment.valueOf() - startSession[socket.id].valueOf()) / 1000;
+                    console.log(onlineOperatorList);
+                    const data = {
+                        userId: users[socket.id], 
+                        duration: Math.floor(onlineDuration)
+                    }
+                    const saveTraffic = await trafficSer.create(data);
+                    const index = onlineOperatorList.indexOf(users[socket.id]);
+                    if (index > -1) {
+                        onlineOperatorList.splice(index, 1);
+                    }
+                    this.server.emit('listOnlineUser', onlineOperatorList);
+                    console.log('tiiips', socket.id);
+                    console.log('user id - ', users[socket.id])
+                    console.log('DURATION SESSION - ', Math.floor(onlineDuration))
                 }
-                const saveTraffic = await trafficSer.create(data);
-                const index = onlineOperatorList.indexOf(users[socket.id]);
-                if (index > -1) {
-                    onlineOperatorList.splice(index, 1);
-                }
-                this.server.emit('listOnlineUser', onlineOperatorList);
-                console.log('tiiips', socket.id);
-                console.log('user id - ', users[socket.id])
-                console.log('DURATION SESSION - ', Math.floor(onlineDuration))
+                
             });
 
         });
