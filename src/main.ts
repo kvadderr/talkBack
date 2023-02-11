@@ -5,8 +5,11 @@ import { AppModule } from './app.module';
 import { join } from 'path';
 
 async function bootstrap() {
+  const privateKey = fs.readFileSync('/etc/letsencrypt/live/kuku12875.ru/privkey.pem', 'utf8');
+  const certificate = fs.readFileSync('/etc/letsencrypt/live/kuku12875.ru/fullchain.pem', 'utf8');
+  const httpsOptions = {key: privateKey, cert: certificate};
   const PORT = process.env.PORT;
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {httpsOptions});
   app.use(cookieParser());
   app.enableCors({
     origin: 'http://95.181.224.98:5173',
