@@ -13,7 +13,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {httpsOptions});
   app.use(cookieParser());
   app.enableCors({
-    origin: 'http://95.181.224.98:5173',
+    origin: 'https://kuku12875.ru',
     credentials: true
   });
   
