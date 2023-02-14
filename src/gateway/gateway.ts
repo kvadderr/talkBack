@@ -118,7 +118,7 @@ export class MyGateway implements OnModuleInit {
             });
 
             socket.on('connectionClose', async function (data) {
-                console.log(data);
+                console.log('connectionClose' ,data);
                 this.server.in(data.opponentId).emit('connectionClose');
                 clearInterval(timers[data.clientId]);
                 i = 0 ;

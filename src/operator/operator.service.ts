@@ -24,7 +24,7 @@ export class OperatorService {
   async getTopOperator(){
     const [data, total] = await this.operatorRepository.findAndCount({
       take: 3,
-      skip: 1,
+      skip: 0,
       relations: ['user', 'specialization'],
     });
 
